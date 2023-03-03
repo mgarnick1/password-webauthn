@@ -1,4 +1,7 @@
 import { defineStore } from "pinia";
+import userApi from "../api/index";
+import {base64ToArrayBuffer } from '../utils/utils'
+import { decode } from "base64-arraybuffer";
 
 export const userStore = defineStore("users", {
   state: () => {
@@ -14,6 +17,19 @@ export const userStore = defineStore("users", {
   actions: {
     fetchUser() {
       this.user = { id: 1, name: "Mark" };
+    },
+    async register(email, name) {
+      const response = await userApi.post("users/add", {
+        name,
+        email,
+      });
+      const challenge = response.data;
+      const challengeArrayBuffer = decode(challenge.challenge)
+      challenge.challenge = challengeArrayBuffer
+      challenge.user.id = decode(challenge.user.id)
+      const credential = await navigator.credentials.create({
+        publicKey: challenge,
+      });
     },
   },
 });
