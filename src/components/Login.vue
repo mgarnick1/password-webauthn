@@ -4,9 +4,9 @@
     :email="email"
     :email-rules="emailRules"
     :name-rules="nameRules"
+    :valid="valid"
     @update:email="setEmail($event)"
     @update:name="setName($event)"
-    @update:form="validation($event)"
   ></LoginForm>
 </template>
 
@@ -47,16 +47,24 @@ export default {
   methods: {
     ...mapActions(userStore, ["fetchUser", "register"]),
     validation($event) {
-      debugger
-      this.valid = $event
+      if(!$event) {
+       return this.valid = false;
+      }
+      return this.valid = true
     },
-    setEmail($event) {
-      this.email = $event;
-      this.validation()
+    async setEmail($event) {
+      this.email = $event.value;
+      const validate = await $event.form.validate()
+      if(validate && validate.valid !== undefined) {
+        this.valid = validate.valid
+      }
     },
-    setName($event) {
-      this.name = $event;
-      this.validation()
+    async setName($event) {
+      this.name = $event.value;
+      const validate = await $event.form.validate()
+      if(validate && validate.valid !== undefined) {
+        this.valid = validate.valid
+      }
     },
   },
   async created() {

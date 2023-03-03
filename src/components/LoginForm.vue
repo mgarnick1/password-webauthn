@@ -1,15 +1,18 @@
 <template>
-  <v-form
-    class="w-100"
-    :value="valid"
-  >
+  <v-form class="w-100" ref="loginForm">
     <v-row justify="center">
       <v-col cols="6">
         <v-text-field
+          ref="email"
           :value="email"
           :rules="emailRules"
           label="Email"
-          @input="$emit('update:email', $event.target.value)"
+          @input="
+            $emit('update:email', {
+              value: $event?.target.value,
+              form: $refs.loginForm,
+            })
+          "
           required
         ></v-text-field>
       </v-col>
@@ -17,19 +20,28 @@
     <v-row justify="center">
       <v-col cols="6">
         <v-text-field
+          ref="name"
           :value="name"
           :rules="nameRules"
-          :counter="10"
           label="Name"
-          @input="$emit('update:name', $event.target.value)"
+          @input="
+            $emit('update:name', {
+              value: $event?.target.value,
+              form: $refs.loginForm,
+            })
+          "
           required
         ></v-text-field>
       </v-col>
     </v-row>
     <v-row justify="center">
       <!-- <v-col cols="12"> -->
-      <div class="d-flex justify-space-around align-center flex-column flex-md-row fill-height">
-        <v-btn color="primary" rounded="lg" size="x-large" :disabled="valid">Register</v-btn>
+      <div
+        class="d-flex justify-space-around align-center flex-column flex-md-row fill-height"
+      >
+        <v-btn color="primary" rounded="lg" size="x-large" :disabled="!valid"
+          >Register</v-btn
+        >
       </div>
       <!-- </v-col> -->
     </v-row>
@@ -46,7 +58,7 @@ export default {
     },
     valid: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     name: {
       type: [String],
