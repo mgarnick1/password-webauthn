@@ -46,25 +46,27 @@ export default {
   },
   methods: {
     ...mapActions(userStore, ["fetchUser", "register"]),
-    validation($event) {
-      if(!$event) {
-       return this.valid = false;
+    validation(loginForm, email, name) {
+      const validate = loginForm.items?.every((i) => i.isValid);
+      if (
+        validate !== undefined &&
+        email &&
+        /.+@.+\..+/.test(email) &&
+        name &&
+        name.length <= 10
+      ) {
+        this.valid = validate;
+      } else {
+        this.valid = false;
       }
-      return this.valid = true
     },
-    async setEmail($event) {
-      this.email = $event.value;
-      const validate = await $event.form.validate()
-      if(validate && validate.valid !== undefined) {
-        this.valid = validate.valid
-      }
+    setEmail($event) {
+      this.email = $event.value.trim();
+      this.validation($event.form, this.email, this.name);
     },
-    async setName($event) {
-      this.name = $event.value;
-      const validate = await $event.form.validate()
-      if(validate && validate.valid !== undefined) {
-        this.valid = validate.valid
-      }
+    setName($event) {
+      this.name = $event.value.trim();
+      this.validation($event.form, this.email, this.name);
     },
   },
   async created() {

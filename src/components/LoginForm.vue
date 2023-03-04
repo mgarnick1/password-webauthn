@@ -35,15 +35,20 @@
       </v-col>
     </v-row>
     <v-row justify="center">
-      <!-- <v-col cols="12"> -->
-      <div
-        class="d-flex justify-space-around align-center flex-column flex-md-row fill-height"
-      >
-        <v-btn color="primary" rounded="lg" size="x-large" :disabled="!valid"
-          >Register</v-btn
+      <v-col cols="6">
+        <div
+          class="d-flex justify-space-around align-center flex-column flex-md-row fill-height"
         >
-      </div>
-      <!-- </v-col> -->
+          <v-btn
+            class="w-100"
+            color="primary"
+            rounded="lg"
+            size="x-large"
+            :disabled="!valid"
+            >Register</v-btn
+          >
+        </div>
+      </v-col>
     </v-row>
   </v-form>
 </template>
