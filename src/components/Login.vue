@@ -5,8 +5,12 @@
     :email-rules="emailRules"
     :name-rules="nameRules"
     :valid="valid"
+    :show-login="showLogin"
     @update:email="setEmail($event)"
     @update:name="setName($event)"
+    @registration="submitRegistration()"
+    @toggleLogin="toggleLogin()"
+    @loginWithUser="()=> {}"
   ></LoginForm>
 </template>
 
@@ -18,6 +22,7 @@ export default {
   name: "Login",
   data: () => ({
     valid: false,
+    showLogin: false,
     name: "",
     nameRules: [
       (value) => {
@@ -68,6 +73,12 @@ export default {
       this.name = $event.value.trim();
       this.validation($event.form, this.email, this.name);
     },
+    async submitRegistration() {
+      await this.register(this.email, this.name)
+    },
+    toggleLogin() {
+      this.showLogin = !this.showLogin
+    }
   },
   async created() {
     this.fetchUser();
