@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import userApi from "../api/index";
-import {base64ToArrayBuffer } from '../utils/utils'
+import {
+  base64ToArrayBuffer,
+  encodeCredentialInfoRequest,
+} from "../utils/utils";
 import { decode } from "base64-arraybuffer";
 
 export const userStore = defineStore("users", {
@@ -23,13 +26,17 @@ export const userStore = defineStore("users", {
         name,
         email,
       });
-      const challenge = response.data;
-      const challengeArrayBuffer = decode(challenge.challenge)
-      challenge.challenge = challengeArrayBuffer
-      challenge.user.id = decode(challenge.user.id)
-      const credential = await navigator.credentials.create({
-        publicKey: challenge,
-      });
+      if (response.data && response.data?.challenge && response.data?.user) {
+        const challenge = response.data;
+        const challengeArrayBuffer = decode(challenge.challenge);
+        challenge.challenge = challengeArrayBuffer;
+        challenge.user.id = decode(challenge.user.id);
+        const credential = await navigator.credentials.create({
+          publicKey: challenge,
+        });
+        const encodeCredential = encodeCredentialInfoRequest(credential);
+        
+      }
     },
   },
 });
