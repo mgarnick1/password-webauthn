@@ -12,9 +12,11 @@ export const base64ToArrayBuffer = (base64, window) => {
 };
 
 export const encodeCredentialInfoRequest = (publicKeyCredential) => {
-  if (pubKeyCred instanceof Array) {
+  if (publicKeyCredential instanceof Array) {
     let arr = [];
-    for (let i of pubKeyCred) arr.push(encodeCredentialInfoRequest(i));
+    for (let i of pubKeyCred) {
+      arr.push(encodeCredentialInfoRequest(i));
+    }
 
     return arr;
   }

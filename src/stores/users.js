@@ -35,8 +35,16 @@ export const userStore = defineStore("users", {
           publicKey: challenge,
         });
         const encodeCredential = encodeCredentialInfoRequest(credential);
-        
+        await this.finishRegistration(encodeCredential);
       }
+    },
+    async finishRegistration(encodedCredential) {
+      const response = await userApi
+        .post("users/register", encodedCredential)
+        .catch((err) => {
+          console.log(err);
+        });
+      return response;
     },
   },
 });
