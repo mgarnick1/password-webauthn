@@ -10,6 +10,7 @@ export const userStore = defineStore("users", {
   state: () => {
     return {
       user: {},
+      showLogin: false,
     };
   },
   getters: {
@@ -44,7 +45,13 @@ export const userStore = defineStore("users", {
         .catch((err) => {
           console.log(err);
         });
+      if (response.data && response.data.registered) {
+        this.showLogin = true;
+      }
       return response;
+    },
+    toggleLoginAction() {
+      this.showLogin = !this.showLogin;
     },
   },
 });

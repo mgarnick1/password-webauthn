@@ -22,7 +22,6 @@ export default {
   name: "Login",
   data: () => ({
     valid: false,
-    showLogin: false,
     name: "",
     nameRules: [
       (value) => {
@@ -47,10 +46,10 @@ export default {
     ],
   }),
   computed: {
-    ...mapState(userStore, ["user"]),
+    ...mapState(userStore, ["user", "showLogin"]),
   },
   methods: {
-    ...mapActions(userStore, ["fetchUser", "register"]),
+    ...mapActions(userStore, ["fetchUser", "register", "toggleLoginAction"]),
     validation(loginForm, email, name) {
       const validate = loginForm.items?.every((i) => i.isValid);
       if (
@@ -77,12 +76,11 @@ export default {
       await this.register(this.email, this.name)
     },
     toggleLogin() {
-      this.showLogin = !this.showLogin
+      this.toggleLoginAction()
     }
   },
   async created() {
     this.fetchUser();
-    // await this.register("markgman008@gmail.com", "Mark")
   },
   components: { LoginForm },
 };
