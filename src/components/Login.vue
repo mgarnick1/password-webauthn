@@ -10,7 +10,7 @@
     @update:name="setName($event)"
     @registration="submitRegistration()"
     @toggleLogin="toggleLogin()"
-    @loginWithUser="()=> {}"
+    @loginWithUser="submitLogin()"
   ></LoginForm>
 </template>
 
@@ -49,7 +49,12 @@ export default {
     ...mapState(userStore, ["user", "showLogin"]),
   },
   methods: {
-    ...mapActions(userStore, ["fetchUser", "register", "toggleLoginAction"]),
+    ...mapActions(userStore, [
+      "fetchUser",
+      "register",
+      "toggleLoginAction",
+      "loginUser",
+    ]),
     validation(loginForm, email, name) {
       const validate = loginForm.items?.every((i) => i.isValid);
       if (
@@ -73,11 +78,14 @@ export default {
       this.validation($event.form, this.email, this.name);
     },
     async submitRegistration() {
-      await this.register(this.email, this.name)
+      await this.register(this.email, this.name);
     },
     toggleLogin() {
-      this.toggleLoginAction()
-    }
+      this.toggleLoginAction();
+    },
+    async submitLogin() {
+      await this.loginUser(this.email);
+    },
   },
   async created() {
     this.fetchUser();

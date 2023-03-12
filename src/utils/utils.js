@@ -56,3 +56,19 @@ export const publicKeyCredentialToJSON = (publicKeyCredential) => {
   }
   return publicKeyCredential;
 };
+
+export const encodeAssetRequest = (assetReq) => {
+  assetReq.challenge = decode(assetReq.challenge);
+
+  for (let allowCred of assetReq.allowCredentials) {
+    allowCred.id = decode(allowCred.id);
+  }
+
+  return assetReq;
+};
+
+export const encodeCredentialsRequest = (credReq) => {
+  credReq.challenge = decode(credReq.challenge);
+  credReq.user.id = decode(credReq.user.id);
+  return credReq;
+};

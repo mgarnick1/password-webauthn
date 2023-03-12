@@ -53,5 +53,38 @@ export const userStore = defineStore("users", {
     toggleLoginAction() {
       this.showLogin = !this.showLogin;
     },
+    async loginUser(email) {
+      let response = {};
+      try {
+        response = await userApi.post("users/login", { email });
+        if (response.data) {
+          const challenge = response.data;
+          challenge.challenge = decode(challenge.challenge);
+          challenge.allowCredentials = challenge.allowCredentials.map(
+            (cred) => ({
+              ...cred,
+              id: decode(cred.id),
+            })
+          );
+          const credential = await navigator.credentials.get({
+            publicKey: challenge,
+          });
+          const encodeCredential = encodeCredentialInfoRequest(credential);
+          await this.loginVerify(encodeCredential);
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        return response.data;
+      }
+    },
+    async loginVerify(credentials) {
+      try {
+        const response = await userApi.post("users/verify", credentials);
+        if (response.data) {
+          this.user = response.data.user;
+        }
+      } catch (e) {}
+    },
   },
 });
