@@ -85,6 +85,7 @@ export default {
     },
     async submitLogin() {
       await this.loginUser(this.email);
+      this.$router.push({ name: "home" });
     },
   },
   async created() {
