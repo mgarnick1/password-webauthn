@@ -86,5 +86,15 @@ export const userStore = defineStore("users", {
         }
       } catch (e) {}
     },
+    async logoutUserAction() {
+      try {
+        const response = await userApi.post("users/logout", {});
+        if (response.data) {
+          this.user = null;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
 });

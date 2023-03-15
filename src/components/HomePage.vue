@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar :user="user" @selectLogout="() => {}" />
+    <NavBar :user="user" @selectLogout="logoutUser" />
   </div>
 </template>
 
@@ -15,6 +15,13 @@ export default {
   },
   components: {
     NavBar,
+  },
+  methods: {
+    ...mapActions(userStore, ["logoutUserAction"]),
+    async logoutUser() {
+      await this.logoutUserAction();
+      this.$router.push({ path: "/" });
+    },
   },
 };
 </script>

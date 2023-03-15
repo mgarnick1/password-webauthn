@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-app-bar color="info" density="compact" elevation="1">
+    <v-app-bar color="primary" density="compact" elevation="1">
       <v-app-bar-title>Hello {{ user?.name }}</v-app-bar-title>
       <template v-slot:append>
         <v-btn size="large" icon @click="selectLogout">
@@ -20,6 +20,11 @@ export default {
       type: Object,
       default: () => {},
     },
+  },
+  mounted() {
+    if (!this.user?.name) {
+      this.$router.push({ path: "/" });
+    }
   },
   methods: {
     selectLogout() {
