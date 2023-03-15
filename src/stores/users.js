@@ -11,7 +11,11 @@ export const userStore = defineStore("users", {
     return {
       user: {},
       showLogin: false,
+      token: "",
     };
+  },
+  persist: {
+    enabled: true,
   },
   getters: {
     getUser(state) {

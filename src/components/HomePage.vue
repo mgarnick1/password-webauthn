@@ -31,6 +31,7 @@ export default {
     ...mapActions(quoteStore, ["getQuotesAction"]),
     async logoutUser() {
       await this.logoutUserAction();
+      sessionStorage.removeItem("users");
       this.$router.push({ path: "/" });
     },
     async getQuote() {

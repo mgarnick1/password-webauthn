@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     ...mapActions(userStore, [
-      "fetchUser",
       "register",
       "toggleLoginAction",
       "loginUser",
@@ -87,9 +86,6 @@ export default {
       await this.loginUser(this.email);
       this.$router.push({ name: "home" });
     },
-  },
-  async created() {
-    this.fetchUser();
   },
   components: { LoginForm },
 };

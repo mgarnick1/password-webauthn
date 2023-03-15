@@ -12,6 +12,9 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { userStore } from "../stores/users";
+
 export default {
   name: "NavBar",
   emits: ["selectLogout"],
