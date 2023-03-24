@@ -1,14 +1,9 @@
 import { Buffer } from "buffer";
-import { decode, encode } from "base64-arraybuffer";
 
-export const base64ToArrayBuffer = (base64, window) => {
-  var binary_string = Buffer.from(base64, "base64");
-  var len = binary_string.length;
-  var bytes = new Uint8Array(len);
-  for (var i = 0; i < len; i++) {
-    bytes[i] = binary_string.charCodeAt(i);
-  }
-  return bytes.buffer;
+export const base64ToArrayBuffer = (base64) => {
+  var buffer = Buffer.from(base64, "base64");
+  var arraybuffer = new Uint8Array(buffer).buffer;
+  return arraybuffer;
 };
 
 export const encodeCredentialInfoRequest = (publicKeyCredential) => {
@@ -21,7 +16,7 @@ export const encodeCredentialInfoRequest = (publicKeyCredential) => {
     return arr;
   }
   if (publicKeyCredential instanceof ArrayBuffer) {
-    return encode(publicKeyCredential);
+    return arrayBufferToString(publicKeyCredential);
   }
   if (publicKeyCredential instanceof Object) {
     let obj = {};
@@ -33,42 +28,51 @@ export const encodeCredentialInfoRequest = (publicKeyCredential) => {
   return publicKeyCredential;
 };
 
-export const publicKeyCredentialToJSON = (publicKeyCredential) => {
-  if (publicKeyCredential instanceof Array) {
-    let arr = [];
-    for (let i of publicKeyCredential) {
-      arr.push(publicKeyCredentialToJSON(i));
-    }
+// export const publicKeyCredentialToJSON = (publicKeyCredential) => {
+//   if (publicKeyCredential instanceof Array) {
+//     let arr = [];
+//     for (let i of publicKeyCredential) {
+//       arr.push(publicKeyCredentialToJSON(i));
+//     }
 
-    return arr;
-  }
+//     return arr;
+//   }
 
-  if (publicKeyCredential instanceof ArrayBuffer) {
-    return decode(publicKeyCredential);
-  }
+//   if (publicKeyCredential instanceof ArrayBuffer) {
+//     return decode(publicKeyCredential);
+//   }
 
-  if (publicKeyCredential instanceof Object) {
-    let obj = {};
-    for (const key in publicKeyCredential) {
-      obj[key] = publicKeyCredentialToJSON(publicKeyCredential[key]);
-    }
-    return obj;
-  }
-  return publicKeyCredential;
-};
+//   if (publicKeyCredential instanceof Object) {
+//     let obj = {};
+//     for (const key in publicKeyCredential) {
+//       obj[key] = publicKeyCredentialToJSON(publicKeyCredential[key]);
+//     }
+//     return obj;
+//   }
+//   return publicKeyCredential;
+// };
 
-export const encodeAssetRequest = (assetReq) => {
-  assetReq.challenge = decode(assetReq.challenge);
+// export const encodeAssetRequest = (assetReq) => {
+//   assetReq.challenge = decode(assetReq.challenge);
 
-  for (let allowCred of assetReq.allowCredentials) {
-    allowCred.id = decode(allowCred.id);
-  }
+//   for (let allowCred of assetReq.allowCredentials) {
+//     allowCred.id = decode(allowCred.id);
+//   }
 
-  return assetReq;
-};
+//   return assetReq;
+// };
 
-export const encodeCredentialsRequest = (credReq) => {
-  credReq.challenge = decode(credReq.challenge);
-  credReq.user.id = decode(credReq.user.id);
-  return credReq;
-};
+// export const encodeCredentialsRequest = (credReq) => {
+//   credReq.challenge = decode(credReq.challenge);
+//   credReq.user.id = decode(credReq.user.id);
+//   return credReq;
+// };
+
+export const arrayBufferToString = (arrayBuffer) => {
+  const buffer = Buffer.from(arrayBuffer);
+  let bufferToString = new Buffer(buffer).toString('base64');
+  const plusReplace = /[+]/g;
+  const forwardSlashReplace = /[/]/g;
+  bufferToString = bufferToString.replace(plusReplace, '-').replace(forwardSlashReplace, '_')
+  return bufferToString;
+}

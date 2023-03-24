@@ -4,7 +4,6 @@ import {
   base64ToArrayBuffer,
   encodeCredentialInfoRequest,
 } from "../utils/utils";
-import { decode } from "base64-arraybuffer";
 
 export const userStore = defineStore("users", {
   state: () => {
@@ -33,9 +32,8 @@ export const userStore = defineStore("users", {
       });
       if (response.data && response.data?.challenge && response.data?.user) {
         const challenge = response.data;
-        const challengeArrayBuffer = decode(challenge.challenge);
-        challenge.challenge = challengeArrayBuffer;
-        challenge.user.id = decode(challenge.user.id);
+        challenge.challenge = base64ToArrayBuffer(challenge.challenge);
+        challenge.user.id = base64ToArrayBuffer(challenge.user.id);
         const credential = await navigator.credentials.create({
           publicKey: challenge,
         });
@@ -63,11 +61,11 @@ export const userStore = defineStore("users", {
         response = await userApi.post("users/login", { email });
         if (response.data) {
           const challenge = response.data;
-          challenge.challenge = decode(challenge.challenge);
+          challenge.challenge = base64ToArrayBuffer(challenge.challenge);
           challenge.allowCredentials = challenge.allowCredentials.map(
             (cred) => ({
               ...cred,
-              id: decode(cred.id),
+              id: base64ToArrayBuffer(cred.id),
             })
           );
           const credential = await navigator.credentials.get({

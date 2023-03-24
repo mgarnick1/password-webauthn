@@ -9,7 +9,9 @@ export const quoteStore = defineStore("quotes", {
   },
   actions: {
     async getQuotesAction() {
-      const response = await api.get("quote");
+      const response = await api.get("quote").catch((e) => {
+        console.log(e.message);
+      });
       if (response?.data?.quote) {
         this.quote = response.data.quote;
       }
